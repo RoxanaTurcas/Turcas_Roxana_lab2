@@ -1,8 +1,8 @@
-﻿@page
+﻿@page "/"
 @model Turcas_Roxana_lab2.Pages.Books.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Books";
 }
 
 <h1>Index</h1>
@@ -10,15 +10,6 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
-<form method="get">
-    <p>
-        Author:
-        <select asp-for="SelectedAuthorId" asp-items="Model.Authors" class="form-control" style="width:200px; display:inline-block;">
-            <option value="">All</option>
-        </select>
-        <input type="submit" value="Filter" class="btn btn-primary" />
-    </p>
-</form>
 
 <table class="table">
     <thead>
@@ -26,10 +17,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Book[0].Title)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Book[0].Author.FullName)
-
+            <th> @Html.DisplayName("Author")
             </th>
+ 
             <th>
                 @Html.DisplayNameFor(model => model.Book[0].Price)
             </th>
@@ -37,19 +27,28 @@
                 @Html.DisplayNameFor(model => model.Book[0].PublishingDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Book[0].Publisher.PublisherName)
+                @Html.DisplayNameFor(model => model.Book[0].Publisher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].BookCategories)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Book) {
-        <tr>
+    @foreach (var item in Model.BookD.Books)
+    {
+        string selectedRow = "";
+        if (item.ID == Model.BookID)
+        {
+            selectedRow = "table-success";
+        }
+                <tr class="@selectedRow">
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Author.FullName)
+                    @item.Author.FirstName @item.Author.LastName
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
@@ -60,6 +59,15 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Publisher.PublisherName)
                 </td>
+                <td>
+                 @{
+                 foreach (var category in item.BookCategories)
+                  {
+                 @category.Category.ID @: @category.Category.CategoryName <br/>
+                   }
+                    }
+                 </td>
+
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |

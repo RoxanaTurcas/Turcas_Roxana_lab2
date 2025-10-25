@@ -20,38 +20,36 @@ namespace Turcas_Roxana_lab2.Pages.Books
             _context = context;
         }
 
-        public IList<Book> Book { get; set; } = default!;
-        public SelectList Authors { get; set; }
+        public IList<Book> Book { get; set; }
+        public BookData BookD { get; set; }
+        public int BookID { get; set; }
+        public int CategoryID { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public int? SelectedAuthorId { get; set; }
-
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? id, int? categoryID)
         {
-            var authorsList = await _context.Author
-       .OrderBy(a => a.LastName)
-       .ThenBy(a => a.FirstName)
-       .Select(a => new
-       {
-           a.ID,
-           FullName = a.FirstName + " " + a.LastName
-       })
-       .ToListAsync();
+            BookD = new BookData();
 
-            Authors = new SelectList(authorsList, "ID", "FullName");
+            BookD.Books = await _context.Book
+                .Include(b => b.Publisher)
+                .Include(b => b.Author)
+                .Include(b => b.BookCategories)
+                    .ThenInclude(bc => bc.Category)
+                .AsNoTracking()
+                .OrderBy(b => b.Title)
+                .ToListAsync();
 
-            var booksQuery = _context.Book
-               .Include(b => b.Publisher)
-               .Include(b => b.Author)
-               .AsQueryable();
-            if (SelectedAuthorId.HasValue)
+            if (id != null)
             {
-                booksQuery = booksQuery.Where(b => b.AuthorId == SelectedAuthorId.Value);
+                BookID = id.Value;
+                Book book = BookD.Books
+                    .Where(i => i.ID == id.Value)
+                    .Single();
+                BookD.Categories = book.BookCategories
+                    .Select(s => s.Category);
             }
-
-            Book = await booksQuery.ToListAsync();
-
         }
-    } }
+    }
+}
+
 
 

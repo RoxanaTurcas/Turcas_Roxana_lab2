@@ -19,6 +19,7 @@ namespace Turcas_Roxana_lab2.Data
         public DbSet<Turcas_Roxana_lab2.Models.Publisher> Publisher { get; set; } = default!;
 
         public DbSet<Turcas_Roxana_lab2.Models.Author> Author { get; set; } = default!;
+        public DbSet<Turcas_Roxana_lab2.Models.Category> Category { get; set; } = default!;
 
     }
 }
