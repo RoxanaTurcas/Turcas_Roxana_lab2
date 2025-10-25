@@ -10,15 +10,6 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
-<form method="get">
-    <p>
-        Author:
-        <select asp-for="SelectedAuthorId" asp-items="Model.Authors" class="form-control" style="width:200px; display:inline-block;">
-            <option value="">All</option>
-        </select>
-        <input type="submit" value="Filter" class="btn btn-primary" />
-    </p>
-</form>
 
 <table class="table">
     <thead>
