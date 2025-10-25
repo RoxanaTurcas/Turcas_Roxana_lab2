@@ -23,20 +23,18 @@ namespace Turcas_Roxana_lab2.Pages.Books
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var book = await _context.Book.FirstOrDefaultAsync(m => m.ID == id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                Book = book;
-            }
+            var book = await _context.Book
+                .Include(b => b.Author) 
+                .Include(b => b.BookCategories)
+                    .ThenInclude(bc => bc.Category)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (book == null) return NotFound();
+
+            Book = book;
             return Page();
         }
     }
